@@ -215,7 +215,7 @@ public class CacheChannel extends ReceiverAdapter implements CacheExpiredListene
     @Override
     public void receive(Message msg) {
         //无效消息
-        byte[] buffers = msg.getRawBuffer();
+        byte[] buffers = msg.getBuffer();
         if (buffers.length < 1) {
             log.warn("Message is empty.");
             return;
