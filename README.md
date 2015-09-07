@@ -8,6 +8,10 @@ j2cache
 
 主要修改内容如下：
 ========
+    2015-09-07
+    修改clear批量删除时二级缓存redis未删除的bug，并增加clear的消息广播，清理集群其他机器的一级缓存
+
+========
 
     1、整个去掉了针对hibernate的支持，主要是由于原版本中依赖的hibernate版本过低，也不会用，所以干脆去掉，减少依赖
     2、FSTSerializer中使用FSTConfiguration的方式进行序列化
