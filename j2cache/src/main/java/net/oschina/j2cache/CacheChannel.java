@@ -20,6 +20,7 @@ public class CacheChannel extends ReceiverAdapter implements CacheExpiredListene
     private final static String CONFIG_XML = "/network.xml";
 
     private final static byte OPT_DELETE_KEY = 0x01;
+    private final static byte OPT_CLEAR_KEY = 0x02;
 
     public final static byte LEVEL_1 = 1;
     public final static byte LEVEL_2 = 2;
@@ -67,9 +68,6 @@ public class CacheChannel extends ReceiverAdapter implements CacheExpiredListene
     /**
      * 获取缓存中的数据
      *
-     * @param <T>
-     * @param level
-     * @param resultClass
      * @param region
      * @param key
      * @return
@@ -95,7 +93,6 @@ public class CacheChannel extends ReceiverAdapter implements CacheExpiredListene
     /**
      * 写入缓存
      *
-     * @param level
      * @param region
      * @param key
      * @param value
@@ -151,6 +148,18 @@ public class CacheChannel extends ReceiverAdapter implements CacheExpiredListene
     public void clear(String region) throws CacheException {
         CacheManager.clear(LEVEL_1, region);
         CacheManager.clear(LEVEL_2, region);
+        _sendClearCmd(region);
+    }
+
+    private void _sendClearCmd(String region) {
+        // 发送广播
+        Command cmd = new Command(OPT_CLEAR_KEY, region, "");
+        try {
+            Message msg = new Message(null, null, cmd.toBuffers());
+            channel.send(msg);
+        } catch (Exception e) {
+            log.error("Unable to clear cache,region=" + region, e);
+        }
     }
 
     @SuppressWarnings("rawtypes")
@@ -235,12 +244,19 @@ public class CacheChannel extends ReceiverAdapter implements CacheExpiredListene
                 case OPT_DELETE_KEY:
                     onDeleteCacheKey(cmd.region, cmd.key);
                     break;
+                case OPT_CLEAR_KEY:
+                    onClearCache(cmd.region);
+                    break;
                 default:
                     log.warn("Unknown message type = " + cmd.operator);
             }
         } catch (Exception e) {
             log.error("Unable to handle received msg", e);
         }
+    }
+
+    private void onClearCache(String region) {
+        CacheManager.clear(LEVEL_1, region);
     }
 
     /**

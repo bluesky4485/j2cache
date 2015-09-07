@@ -30,7 +30,7 @@ public interface CacheProvider {
      * Callback to perform any necessary initialization of the underlying cache implementation
      * during SessionFactory construction.
      *
-     * @param properties current configuration settings.
+     * @param props current configuration settings.
      */
     public void start(Properties props) throws CacheException;
 

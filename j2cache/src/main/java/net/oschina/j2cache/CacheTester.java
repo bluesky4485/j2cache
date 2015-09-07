@@ -25,11 +25,11 @@ public class CacheTester {
                 System.out.print("> ");
                 System.out.flush();
 
-                String line = in.readLine().trim();
-                if (line.equalsIgnoreCase("quit") || line.equalsIgnoreCase("exit"))
+                String line = in.readLine();
+                if (null == line || line.trim().equalsIgnoreCase("quit") || line.trim().equalsIgnoreCase("exit"))
                     break;
 
-                String[] cmds = line.split(" ");
+                String[] cmds = line.trim().split(" ");
                 if ("get".equalsIgnoreCase(cmds[0])) {
                     CacheObject obj = cache.get(cmds[1], cmds[2]);
                     System.out.printf("[%s,%s,L%d]=>%s\n", obj.getRegion(), obj.getKey(), obj.getLevel(), obj.getValue());

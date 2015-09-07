@@ -47,18 +47,18 @@ public class EhCacheProvider implements CacheProvider {
         return "ehcache";
     }
 
-    /**
+    /***
      * Builds a Cache.
      * <p/>
      * Even though this method provides properties, they are not used.
      * Properties for EHCache are specified in the ehcache.xml file.
      * Configuration will be read from ehcache.xml for a cache declaration
      * where the name attribute matches the name parameter in this builder.
-     *
-     * @param name       the name of the cache. Must match a cache configured in ehcache.xml
-     * @param properties not used
+     * @param name  the name of the cache. Must match a cache configured in ehcache.xml
+     * @param autoCreate autoCreate settings
+     * @param listener   listener for expired elements
      * @return a newly built cache will be built and initialised
-     * @throws CacheException inter alia, if a cache of the same name already exists
+     * @throws CacheException
      */
     public EhCache buildCache(String name, boolean autoCreate, CacheExpiredListener listener) throws CacheException {
         EhCache ehcache = _CacheManager.get(name);
@@ -89,7 +89,7 @@ public class EhCacheProvider implements CacheProvider {
      * Callback to perform any necessary initialization of the underlying cache implementation
      * during SessionFactory construction.
      *
-     * @param properties current configuration settings.
+     * @param props current configuration settings.
      */
     public void start(Properties props) throws CacheException {
         if (manager != null) {
